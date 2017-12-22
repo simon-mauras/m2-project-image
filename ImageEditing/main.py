@@ -35,6 +35,7 @@ for i in range(size):
 
 A = []
 b = [[],[],[]]
+x0 = [[],[],[]]
 for c in range(3):
   row = []
   col = []
@@ -42,6 +43,7 @@ for c in range(3):
   id_row = 0
   for (i,j) in border:
     b[c].append(background[i+delta[0]][j+delta[1]][c])
+    x0[c].append(background[i+delta[0]][j+delta[1]][c])
     data.append(1)
     row.append(id_row)
     col.append(coord_to_id[(i,j)])
@@ -55,6 +57,8 @@ for c in range(3):
       col.append(coord_to_id[(i+di,j+dj)])
       value = value - foreground[i+di][j+dj][c]
     b[c].append(value)
+    x0[c].append(foreground[i][j][c])
+    
     id_row = id_row + 1
   A.append(matrix((data,(row,col)), shape=(id_row,size)))
 
@@ -66,12 +70,14 @@ def display(img, colors=[0,1,2]):
   plt.imshow(tmp)
   plt.show()
   
+#print(solve(A[c], b[c], x0=x0[c], maxiter=300))
 
 for nb_iter in range(0,5):
   print("Let's solve for maxiter=%d" % (10**nb_iter))
   for c in range(3):
     starting_time = time()
     x = solve(A[c], b[c], maxiter=10**nb_iter)
+    print(x)
     ending_time = time()
     print("Done in %.3lfs" % (ending_time - starting_time))
     for (i,j) in interior:
